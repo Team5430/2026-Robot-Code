@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public class Constants {
     
     public static boolean isRed = DriverStation.getAlliance().get() == Alliance.Blue;
+    //TODO: add correct ids
     public static int[] redIds = new int[] { 1,2,3,45,5};
     public static int[] blueIds = new int[] { 9,8,7};
 

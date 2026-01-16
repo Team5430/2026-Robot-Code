@@ -5,13 +5,12 @@ import frc.robot.Constants;
 public class Vision {
     
     //array for cameras
-    private VisionIO[] cams ;
+    private VisionIO[] cams;
 
     //array for ids that are being used
     private int[] ids;
 
     /**
-     * @param consumer
      * @param cameras
      */
     public Vision(VisionIO... cameras){
@@ -22,14 +21,14 @@ public class Vision {
     }
 
     public void process(){
-
+            
         //for camera in cams
     for(VisionIO c : cams){
 
         //cache estimate
         var cameraEstimate = c.getPose();
 
-        //make theres at least 2 tags
+        //makes sure theres at least 2 tags
         if(cameraEstimate.tagCount > 1 ){
 
             //see if any tags are found
@@ -57,7 +56,7 @@ public class Vision {
                 || c.getPose().pose.getY() < 0.0
                 || c.getPose().pose.getY() > Constants.aprilTagLayout.getFieldWidth();
 
-                //break out the loop if pose not valid
+                //break out the loop if pose not valid  
                     if(rejectPose) break;
 
                 //TODO: utilize/save pose
@@ -68,6 +67,10 @@ public class Vision {
         
         }
     }
+    }
+
+    public double getX(int index){
+        return cams[index].getPose().pose.getX();
     }
 
 }
