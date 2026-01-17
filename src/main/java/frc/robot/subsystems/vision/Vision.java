@@ -21,7 +21,7 @@ public class Vision {
     }
 
     public void process(){
-            
+                                
         //for camera in cams
     for(VisionIO c : cams){
 
