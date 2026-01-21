@@ -6,11 +6,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Kitbotshooter;
+import frc.robot.subsystems.fuelintake;
 public class RobotContainer {
    
   private CommandXboxController Xbox; 
   private Kitbotshooter shooter;
-
+  private fuelintake Intake;
 //i recommend to init all objects here, 
   public RobotContainer(){
     
@@ -22,10 +23,15 @@ public class RobotContainer {
   }
 
   public void configBindings(){
-
+    //shooter test controlls
     Xbox.a().onTrue(shooter.SHOOT());
     Xbox.a().onFalse(shooter.STOP());
-
+    
+    //intake controlls 
+    Xbox.leftBumper().toggleOnTrue(Intake.ACTIVE());
+    Xbox.leftBumper().toggleOnFalse(Intake.IDLE());
+    Xbox.leftTrigger().onTrue(Intake.INTAKE());
+    Xbox.leftTrigger().onFalse(Intake.STOPINTAKE());
   }
   
 }
