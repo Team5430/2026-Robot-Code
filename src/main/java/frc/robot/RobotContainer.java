@@ -4,17 +4,31 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.subsystems.Kitbotshooter;
 public class RobotContainer {
-  public RobotContainer() {
-    configureBindings();
+   
+  private CommandXboxController Xbox; 
+  private Kitbotshooter shooter;
+
+//i recommend to init all objects here, 
+  public RobotContainer(){
+    
+    Xbox = new CommandXboxController(Constants.XboxController); 
+
+
+    configBindings();
+
   }
 
-  private void configureBindings() {}
+  public void configBindings(){
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    Xbox.a().onTrue(shooter.SHOOT());
+    Xbox.a().onFalse(shooter.STOP());
+
   }
+  
 }
+  
+  
+ 
