@@ -1,7 +1,7 @@
 package frc.robot;
 
 public class Constants {
-    
+
     //intake constants
     public static int IntakeRoller = 1;
     public static int IntakePivot = 2;
@@ -14,6 +14,7 @@ public class Constants {
 
     public static int KitbotShooterL = 11;
     public static int KitbotShooterR = 22;
+    public static int CANCODER_ID = 10;
 
 
 

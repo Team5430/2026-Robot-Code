@@ -1,0 +1,23 @@
+{
+  "roller": {
+    "controller": "SparkMax",
+    "canId": 1,
+    "sparkMotorType": "kBrushless"
+  },
+  "pivot": {
+    "controller": "TalonFX",
+    "canId": 2
+  },
+  "canCoderId": 10,
+  "idleAngleDeg": 90.0,
+  "intakeAngleDeg": 180.0,
+  "outtakeAngleDeg": 180.0,
+  "idleSpeed": 0.0,
+  "intakeSpeed": 0.6,
+  "outtakeSpeed": -0.6,
+  "canCoderCounterClockwisePositive": true,
+  "absoluteSensorDiscontinuityPoint": 1.0,
+  "magnetOffset": 0.0,
+  "sensorToMechanismRatio": 1.0,
+  "rotorToSensorRatio": 80.2
+}

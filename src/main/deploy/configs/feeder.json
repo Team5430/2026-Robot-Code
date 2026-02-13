@@ -1,0 +1,18 @@
+{
+  "motor": {
+    "controller": "TalonFX",
+    "canId": 1
+  },
+  "feedSpeed": 0.6,
+  "intakeSpeed": 0.4,
+  "stagingSpeed": 0.2,
+  "reverseSpeed": -0.35,
+  "proximityThreshold": 250,
+  "minRed": 0.35,
+  "minGreen": 0.35,
+  "maxBlue": 0.35,
+  "stagingSeconds": 0.3,
+  "feedSeconds": 0.7,
+  "rejectSeconds": 1.2,
+  "intakeTimeoutSeconds": 4.0
+}

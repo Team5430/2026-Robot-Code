@@ -1,0 +1,6 @@
+{
+  "limelightHeightMeters": 0.5,
+  "targetHeightMeters": 2.5,
+  "limelightAngleDegrees": 25.0,
+  "defaultLedMode": "OFF"
+}

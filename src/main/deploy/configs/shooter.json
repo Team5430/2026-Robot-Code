@@ -1,0 +1,13 @@
+{
+  "motor": {
+    "controller": "TalonFX",
+    "canId": 11
+  },
+  "atTargetToleranceRps": 0.2,
+  "spinupTimeoutSeconds": 1.5,
+  "shotTimeoutSeconds": 2.0,
+  "shots": [
+    {"distanceMeters": 3.0, "rps": 80.0},
+    {"distanceMeters": 4.0, "rps": 90.0}
+  ]
+}
