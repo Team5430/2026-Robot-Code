@@ -1,185 +1,161 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicDutyCycle;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
+// ab code, 0.243 is '0'
 public class fuelintake extends SubsystemBase {
 
+  // Motor Declarations
 
+  private SparkMax IntakeRoller;
 
-    //Motor Declarations
-    private TalonSRX IntakeRoller;
-    private TalonSRX IntakePivot;
+  private TalonFX IntakePivot;
 
-    //Identifying Designated Motor Id's (Id's found in constants)
-    public fuelintake(int id1,int id2){
+  private MotionMagicDutyCycle controller;
+  private CANcoder CanCode;
 
-        IntakeRoller = new TalonSRX(id1);
-        IntakePivot = new TalonSRX(id2);
-        motorconfig();
+  // Identifying Designated Motor Id's (Id's found in constants)
+
+  public fuelintake(int RollerID, int PivotID, int CANID) {
+
+    IntakePivot = new TalonFX(PivotID);
+
+    controller = new MotionMagicDutyCycle(0);
+
+    IntakeRoller = new SparkMax(RollerID, MotorType.kBrushless);
+    CanCode = new CANcoder(CANID);
+
+    motorconfig();
+  }
+
+  public enum IntakeState {
+
+    // States of the intake---When Pivot get to a certain angle, the roller motor will go
+    // on/off(Angle,RollerSpeed)
+
+    IDLE(3, 0),
+
+    OUTTAKE(-20, .6), // Not sure about speeds, test them out
+
+    INTAKE(-20, -0.6);
+
+    public final double Position;
+
+    public final double Speed;
+
+    private IntakeState(double position, double speed) {
+
+      Position = position;
+
+      Speed = speed;
     }
+  }
 
+  // Void action that when used in commands will control the speed of the motors
 
-    public enum IntakeState {
-    
-    //States of the intake---When Pivot get to a certain angle, the roller motor will go on/off(Angle,RollerSpeed)
-    IDLE(90),
-    ACTIVE(180);
-    
-    private final double Angle;
-        
-        IntakeState(double Angle) {
-            this.Angle = Angle;
-            
-        }
-    }
-    //Motor ticks to Degrees conversion (2048(motorticks)/360(degrees))
-    public static double DegtoTick (double Degrees){
-        //This Divides the actual Motor ticks by 360 to show us how many ticks are inside one degree (basic conversions)
-        double TicksPerDegree = Constants.motorticks/360;  
-        //TicksPerDegree = 5.68 which is our base unit of degrees per ticks.
-        //When we multiply it by the degrees we want, we bacically get the total ticks. Ex --> 90° = 511.2 motor ticks.
-        double Angle = TicksPerDegree*Degrees;  
-        return Angle;
-    }
+  public void setSpeed(double WantedSpeed) {
 
-    //Void action that when used in commands will control the speed of the motors
-    public void setSpeed(double WantedSpeed) {
-        IntakeRoller.set(TalonSRXControlMode.PercentOutput, WantedSpeed);
+    IntakeRoller.set(WantedSpeed);
+  }
 
+  // declare this in order to be able to control position, there is different control requests
 
-    }
+  private IntakeState currentState = IntakeState.IDLE;
 
+  // Void action that when used will set our desired state on the motor using an encoder.
 
-    //Void action that when used will set our desired state on the motor using an encoder.
-    private void setState(IntakeState WantedState) {
+  private void setState(IntakeState WantedState) {
 
-        var WantedAngle = DegtoTick(WantedState.Angle);
+    currentState = WantedState;
 
-        IntakePivot.set(TalonSRXControlMode.Position, WantedAngle);
-        
+    IntakePivot.setControl(controller.withPosition(currentState.Position));
 
+    setSpeed(currentState.Speed);
+  }
 
+  // Command that is binded to button which puts the pivot up  (idle mode)
 
-    }
+  public Command IDLE() {
 
-    //Command that is binded to button which puts the pivot up  (idle mode)
-    public Command IDLE (){
-        return Commands.runOnce( ()-> setState(IntakeState.IDLE), this);
+    return Commands.runOnce(() -> setState(IntakeState.IDLE), this);
+  }
 
+  // Command that is binded to button setting the pivot to go down (active intake)
 
+  public Command INTAKE() {
 
-    }
-    //Command that is binded to button setting the pivot to go down (active intake)
-    public Command ACTIVE (){
-        return Commands.runOnce(()-> setState(IntakeState.ACTIVE));
+    return Commands.runOnce(() -> setState(IntakeState.INTAKE), this);
+  }
 
+  public Command OUTTAKE() {
 
+    return Commands.runOnce(() -> setState(IntakeState.OUTTAKE), this);
+  }
 
-    }
-    //command that actually puts the set speed action to use in order to be able to use our roller motor
-    public Command INTAKE (){
-        return Commands.runOnce(()-> setSpeed(.75));
+  // Our use of an encoder and PID
 
+  // Long story short, it slows down the pivot motor once the intake aproaches its desired angle.
 
-    }
-    //command that should stop our intake once we let go (Don't judge this as the easiest way for me to do this).
-    public Command STOPINTAKE (){
-        return Commands.runOnce (()->setSpeed(0));
+  private void motorconfig() {
 
-    }
+    // Configure TalonFX
 
-    //Our use of an encoder and PID
-    //Long story short, it slows down the pivot motor once the intake aproaches its desired angle.
-     private void motorconfig(){
+    TalonFXConfiguration motorConfig = new TalonFXConfiguration();
 
-       //sets all configs on the TalonSRX back to normal
-        IntakePivot.configFactoryDefault();
+    // Configure feedback settings to use remote CANcoder
 
-        //chooses which "sensors" were using (in our case an encoder)
-        IntakePivot.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
-        //tells the sensor its direction (+,-)
-        IntakePivot.setSensorPhase(true); 
-        //the actual math that is done to slow the pivot once we aproach  our  desired angle
-        IntakePivot.config_kP(0, Constants.PivotEncoder);
+    FeedbackConfigs feedbackConfigs = motorConfig.Feedback;
 
+    feedbackConfigs.FeedbackRemoteSensorID = CanCode.getDeviceID();
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
+    Slot0Configs pidConfigs = motorConfig.Slot0;
 
+    pidConfigs.kP = 0.011;
 
+    MotionMagicConfigs motionMagicConfigs = motorConfig.MotionMagic;
 
-    }
+    motionMagicConfigs.MotionMagicAcceleration = 275;
 
+    motionMagicConfigs.MotionMagicCruiseVelocity = 210;
 
+    motionMagicConfigs.MotionMagicExpo_kA = 0.10000000149011612;
 
+    motionMagicConfigs.MotionMagicExpo_kV = 0.11999999731779099;
+    // Set the feedback source to RemoteCANcoder
 
+    // Set the gear ratio between CANcoder and mechanism
 
-    
+    // This is sensor-to-mechanism ratio
 
+    // Example: if CANcoder is 1:1 with output shaft, use 1.0
 
+    // If there's a 10:1 reduction between CANcoder and mechanism, use 10.0
 
+    // Set the gear ratio between motor rotor and CANcoder
 
+    // Example: if motor drives CANcoder through a 12.8:1 reduction, use 12.8
 
+    feedbackConfigs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 
-    }
+    feedbackConfigs.SensorToMechanismRatio = 1;
 
+    feedbackConfigs.RotorToSensorRatio = 80.123;
 
+    // Apply TalonFX configuration
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    IntakePivot.getConfigurator().apply(motorConfig);
+  }
+}

@@ -4,7 +4,12 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -14,7 +19,25 @@ public class Robot extends TimedRobot {
   @SuppressWarnings("unused")
   private final RobotContainer m_robotContainer;
 
+  private final AddressableLED m_led = new AddressableLED(1);
+
+  private AddressableLEDBuffer buffer = new AddressableLEDBuffer(60);
+
   public Robot() {
+    m_led.setLength(buffer.getLength());
+
+    // color scheme of sunset shimmer from my litte pony ❤️😌
+    LEDPattern sunsetShimmer =
+        LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkRed, Color.kRed, Color.kOrange);
+    // value is blend, satuation is color powerfullness
+    sunsetShimmer = LEDPattern.rainbow(600, 20);
+    // apply sunset
+    sunsetShimmer.applyTo(buffer);
+    //
+    m_led.setData(buffer);
+    // start sunset
+    m_led.start();
+
     m_robotContainer = new RobotContainer();
   }
 
@@ -31,11 +54,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledExit() {}
-
-
-
-
-
 
   @Override
   public void autonomousPeriodic() {}
