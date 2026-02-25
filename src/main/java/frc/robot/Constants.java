@@ -9,4 +9,12 @@ public class Constants {
 
   // controller
   public static int XboxController = 1;
+
+  // Shooter
+  public static final double kP=0.11;
+  public static final double KV=0.12;
+  public static int Rollormotor = 10;
+  public static int Controllermotor= 11;
+
+
 }
