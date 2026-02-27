@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.fuelintake;
+import frc.robot.subsystems.limelight;
 
 public class RobotContainer {
 
@@ -32,7 +33,9 @@ public class RobotContainer {
 
   private fuelintake Intake;
 
-   private Shooter Shoot;
+  private Shooter Shoot;
+
+  private limelight Vision;
 
   Command fullShootSequence = new SequentialCommandGroup(
     Shoot.SHOOT(), // Finishes when speed is 60
@@ -73,6 +76,8 @@ public class RobotContainer {
     Intake = new fuelintake(Constants.IntakeRoller, Constants.IntakePivot, Constants.CANID);
 
     Shoot = new Shooter(Constants.Rollormotor,Constants.Controllermotor);
+
+    Vision = new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
 
     // automnomous commands
 
