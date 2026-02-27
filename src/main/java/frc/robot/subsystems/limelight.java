@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class limelight extends SubsystemBase {
 
     private final String name;
+    //goal position map
     private Translation2d goalPosition;
     //table with all limelight data
     private NetworkTable data;
@@ -21,7 +22,7 @@ public class limelight extends SubsystemBase {
     public limelight(String key, DoubleSupplier yaw) {
         name = key;
         data = NetworkTableInstance.getDefault().getTable(key);
-        goalPosition = new Translation2d(0, 0); // Hub cetner
+        goalPosition = new Translation2d(4.7, 4.0); // Hub cetner
         yawSupplier = yaw;
     }
 

@@ -13,8 +13,8 @@ public class Constants {
   // Shooter
   public static final double kP=0.11;
   public static final double KV=0.12;
-  public static int Rollormotor = 10;
-  public static int Controllermotor= 11;
+
+
 
 
 }

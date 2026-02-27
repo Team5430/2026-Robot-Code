@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.generated.TunerConstants;
@@ -33,7 +32,7 @@ public class RobotContainer {
 
   private fuelintake Intake;
 
-  private Shooter Shoot;
+  private Shooter L_Shoot;
 
   private limelight Vision;
 
@@ -78,7 +77,7 @@ public class RobotContainer {
 
     Intake = new fuelintake(Constants.IntakeRoller, Constants.IntakePivot, Constants.CANID);
 
-    Shoot = new Shooter(Constants.Rollormotor,Constants.Controllermotor);
+    L_Shoot = new Shooter(0,0, true);
 
     Vision = new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
 
@@ -94,11 +93,6 @@ namedCommands();
     // button bindings
     configBindings();
        
-    fullShootSequence = new SequentialCommandGroup(
-    Shoot.SHOOT(), // Finishes when speed is 60
-     Shoot.TAKE()       // Starts immediately after
-);
-
 
     FollowPathCommand.warmupCommand().schedule();
 
@@ -106,13 +100,21 @@ namedCommands();
 
   public void configBindings() {
 
-    // intake controlls
+    // intake controls
 
     Xbox.leftBumper().onTrue(Intake.INTAKE());
 
+    //TODO: configure theta lock
+    Xbox.leftTrigger().onTrue(drivetrain.thetaLock(new Rotation2d()));
+
     Xbox.leftBumper().onFalse(Intake.IDLE());
 
-    // THIS MOMENT BEYOND IS CTRE SWERVE GENERATED
+    //TODO: add theta lock when in range for shooting
+    
+
+    //shoots based on distance to goal, probably needs boolean before shooting
+    Xbox.a().onTrue(L_Shoot.SHOOT(Vision.getDistanceToGoal()));
+
 
     drivetrain.setDefaultCommand(
 
@@ -158,7 +160,6 @@ namedCommands();
 
     NamedCommands.registerCommand("INTAKE", Intake.INTAKE());
     NamedCommands.registerCommand("IDLE", Intake.IDLE());
-    NamedCommands.registerCommand("Shoot", Shoot.SHOOT());
   }
 
   public Command getAutonomousCommand() {
