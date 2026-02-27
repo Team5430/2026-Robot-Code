@@ -17,7 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -34,10 +34,7 @@ public class RobotContainer {
 
    private Shooter Shoot;
 
-  Command fullShootSequence = new SequentialCommandGroup(
-    Shoot.SHOOT(), // Finishes when speed is 60
-     Shoot.TAKE()       // Starts immediately after
-);
+  Command fullShootSequence;
   // CTRE SWERVE GENERATED CONTENT DECLARATIONS
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
@@ -73,18 +70,27 @@ public class RobotContainer {
     Intake = new fuelintake(Constants.IntakeRoller, Constants.IntakePivot, Constants.CANID);
 
     Shoot = new Shooter(Constants.Rollormotor,Constants.Controllermotor);
-
+ 
     // automnomous commands
-
+namedCommands();
     // dashboard chooer
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Mode", autoChooser);
 
+  
+
     // button bindings
     configBindings();
+       
+    fullShootSequence = new SequentialCommandGroup(
+    Shoot.SHOOT(), // Finishes when speed is 60
+     Shoot.TAKE()       // Starts immediately after
+);
+
 
     FollowPathCommand.warmupCommand().schedule();
+
   }
 
   public void configBindings() {
@@ -141,6 +147,7 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("INTAKE", Intake.INTAKE());
     NamedCommands.registerCommand("IDLE", Intake.IDLE());
+    NamedCommands.registerCommand("Shoot", Shoot.SHOOT());
   }
 
   public Command getAutonomousCommand() {

@@ -7,7 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "forward"
+            "pathName": "Blue-outpost-1.R"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Blue-outpost-2.R"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {
@@ -17,15 +29,21 @@
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 3.0
+            "pathName": "blue-outpost-3.R"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "IDLE"
+            "name": "INTAKE"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "blue-outpost-4.R"
           }
         }
       ]
