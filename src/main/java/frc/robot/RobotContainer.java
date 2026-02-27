@@ -17,7 +17,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
@@ -25,6 +24,8 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.fuelintake;
+import frc.robot.subsystems.led;
+import frc.robot.subsystems.limelight;
 
 public class RobotContainer {
 
@@ -32,7 +33,11 @@ public class RobotContainer {
 
   private fuelintake Intake;
 
-   private Shooter Shoot;
+  private Shooter Shoot;
+
+  private limelight Vision;
+
+  private led LEDControl;
 
   Command fullShootSequence;
   // CTRE SWERVE GENERATED CONTENT DECLARATIONS
@@ -64,13 +69,19 @@ public class RobotContainer {
 
 
   public RobotContainer() {
+    
+  //turn on leds first in order to make timing as accurate as can be
+    LEDControl = new led(1);
+    LEDControl.initShiftTimer();
 
     Xbox = new CommandXboxController(Constants.XboxController);
 
     Intake = new fuelintake(Constants.IntakeRoller, Constants.IntakePivot, Constants.CANID);
 
     Shoot = new Shooter(Constants.Rollormotor,Constants.Controllermotor);
- 
+
+    Vision = new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
+
     // automnomous commands
 namedCommands();
     // dashboard chooer
