@@ -47,7 +47,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
   /* Keep track if we've ever applied the operator perspective before or not */
   private boolean m_hasAppliedOperatorPerspective = false;
 
-  private final SwerveRequest.FieldCentricFacingAngle target = new SwerveRequest.FieldCentricFacingAngle();
+  private final SwerveRequest.FieldCentricFacingAngle target =
+      new SwerveRequest.FieldCentricFacingAngle();
 
   /**
    * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -160,11 +161,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     return run(() -> this.setControl(request.get()));
   }
 
-  //lock at angle heading
-  public Command thetaLock(Rotation2d wantedDirection){
+  // lock at angle heading
+  public Command thetaLock(Rotation2d wantedDirection) {
     return applyRequest(() -> target.withTargetDirection(wantedDirection));
   }
-
 
   @Override
   public void periodic() {

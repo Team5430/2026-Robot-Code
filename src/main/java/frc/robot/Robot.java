@@ -55,9 +55,9 @@ public class Robot extends TimedRobot {
   public void disabledExit() {}
 
   @Override
-  public void autonomousInit(){
+  public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-     CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    CommandScheduler.getInstance().schedule(m_autonomousCommand);
   }
 
   @Override

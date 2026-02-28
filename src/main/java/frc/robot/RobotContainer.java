@@ -65,11 +65,9 @@ public class RobotContainer {
 
   private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
-
-
   public RobotContainer() {
-    
-  //turn on leds first in order to make timing as accurate as can be
+
+    // turn on leds first in order to make timing as accurate as can be
     LEDControl = new led(1);
     LEDControl.initShiftTimer();
 
@@ -77,25 +75,22 @@ public class RobotContainer {
 
     Intake = new fuelintake(Constants.IntakeRoller, Constants.IntakePivot, Constants.CANID);
 
-    L_Shoot = new Shooter(0,0, true);
+    L_Shoot = new Shooter(0, 0, true);
 
-    Vision = new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
+    Vision =
+        new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
 
     // automnomous commands
-namedCommands();
+    namedCommands();
     // dashboard chooer
     autoChooser = AutoBuilder.buildAutoChooser();
 
     SmartDashboard.putData("Auto Mode", autoChooser);
 
-  
-
     // button bindings
     configBindings();
-       
 
     FollowPathCommand.warmupCommand().schedule();
-
   }
 
   public void configBindings() {
@@ -104,17 +99,15 @@ namedCommands();
 
     Xbox.leftBumper().onTrue(Intake.INTAKE());
 
-    //TODO: configure theta lock
+    // TODO: configure theta lock
     Xbox.leftTrigger().onTrue(drivetrain.thetaLock(new Rotation2d()));
 
     Xbox.leftBumper().onFalse(Intake.IDLE());
 
-    //TODO: add theta lock when in range for shooting
-    
+    // TODO: add theta lock when in range for shooting
 
-    //shoots based on distance to goal, probably needs boolean before shooting
+    // shoots based on distance to goal, probably needs boolean before shooting
     Xbox.a().onTrue(L_Shoot.SHOOT(Vision.getDistanceToGoal()));
-
 
     drivetrain.setDefaultCommand(
 
@@ -165,6 +158,5 @@ namedCommands();
   public Command getAutonomousCommand() {
 
     return autoChooser.getSelected();
-   
   }
 }

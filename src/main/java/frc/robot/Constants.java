@@ -11,10 +11,6 @@ public class Constants {
   public static int XboxController = 1;
 
   // Shooter
-  public static final double kP=0.11;
-  public static final double KV=0.12;
-
-
-
-
+  public static final double kP = 0.11;
+  public static final double KV = 0.12;
 }
