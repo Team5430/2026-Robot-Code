@@ -18,24 +18,10 @@ public class Robot extends TimedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  private final AddressableLED m_led = new AddressableLED(1);
-
-  private AddressableLEDBuffer buffer = new AddressableLEDBuffer(60);
 
   public Robot() {
-    m_led.setLength(buffer.getLength());
 
-    // color scheme of sunset shimmer from my litte pony ❤️😌
-    LEDPattern sunsetShimmer =
-        LEDPattern.gradient(GradientType.kDiscontinuous, Color.kDarkRed, Color.kRed, Color.kOrange);
-    // value is blend, satuation is color powerfullness
-    sunsetShimmer = LEDPattern.rainbow(600, 20);
-    // apply sunset
-    sunsetShimmer.applyTo(buffer);
-    //
-    m_led.setData(buffer);
-    // start sunset
-    m_led.start();
+    
 
     m_robotContainer = new RobotContainer();
   }

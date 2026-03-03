@@ -17,6 +17,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import frc.robot.generated.TunerConstants;
@@ -36,14 +37,12 @@ public class RobotContainer {
 
   private limelight Vision;
 
-  private led LEDControl;
 
   Command fullShootSequence;
   // CTRE SWERVE GENERATED CONTENT DECLARATIONS
 
   public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
-  private final SendableChooser<Command> autoChooser;
 
   private double MaxSpeed =
       1.0 * TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -67,9 +66,6 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    // turn on leds first in order to make timing as accurate as can be
-    LEDControl = new led(1);
-    LEDControl.initShiftTimer();
 
     Xbox = new CommandXboxController(Constants.XboxController);
 
@@ -80,12 +76,7 @@ public class RobotContainer {
     Vision =
         new limelight("limelight", () -> drivetrain.getPigeon2().getYaw(true).getValueAsDouble());
 
-    // automnomous commands
-    namedCommands();
-    // dashboard chooer
-    autoChooser = AutoBuilder.buildAutoChooser();
 
-    SmartDashboard.putData("Auto Mode", autoChooser);
 
     // button bindings
     configBindings();
@@ -157,6 +148,6 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
 
-    return autoChooser.getSelected();
+    return Commands.none();
   }
 }
